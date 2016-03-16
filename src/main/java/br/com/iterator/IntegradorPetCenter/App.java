@@ -6,6 +6,8 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
+import br.com.iterator.model.bean.Configs;
+import br.com.iterator.model.helper.XMLHelper;
 import br.com.iterator.model.util.MagentoConectar;
 
 /**
@@ -16,10 +18,13 @@ public class App
 {
     public static void main( String[] args )
     {
+		XMLHelper xmlHelper = new XMLHelper();
+		Configs configs = xmlHelper.getValorNode();
+		
         MagentoConectar magentoConectar = new MagentoConectar();
-        OAuthService service = magentoConectar.getService();
-        Token accessToken = magentoConectar.getToken();
-        OAuthRequest request = new OAuthRequest(Verb.GET, magentoConectar.getMagentoRestApiUrl() + "/stockitems?type=rest");
+        OAuthService service = magentoConectar.getService(configs);
+        Token accessToken = magentoConectar.getToken(configs);
+        OAuthRequest request = new OAuthRequest(Verb.GET, magentoConectar.getMagentoRestApiUrl(configs) + "/stockitems?type=rest");
 		service.signRequest(accessToken, request);
 		Response response = request.send();
 		
