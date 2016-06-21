@@ -1,4 +1,4 @@
-package br.com.iterator.model.bean;
+package br.com.iterator.model.bean.petcenterjau;
 
 import java.io.Serializable;
 import java.util.Arrays;

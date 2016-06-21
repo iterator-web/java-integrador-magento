@@ -6,7 +6,7 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import br.com.iterator.model.bean.Configs;
+import br.com.iterator.model.bean.petcenterjau.Configs;
 import br.com.iterator.model.helper.XMLHelper;
 import br.com.iterator.model.util.MagentoConectar;
 

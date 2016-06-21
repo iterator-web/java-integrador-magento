@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import br.com.iterator.model.bean.Configs;
+import br.com.iterator.model.bean.petcenterjau.Configs;
 import br.com.iterator.model.helper.JPanelWithBackground;
 import br.com.iterator.model.helper.XMLHelper;
 
