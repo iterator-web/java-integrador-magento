@@ -19,8 +19,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
-import br.com.iterator.model.bean.Configs;
-import br.com.iterator.model.helper.XMLHelper;
+import br.com.iterator.model.bean.petcenterjau.Configs;
 import br.com.iterator.model.util.Magento17Api;
 
 public class MagentoConectar {

@@ -3,7 +3,7 @@ package br.com.iterator.model.util;
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.model.Token;
 
-import br.com.iterator.model.bean.Configs;
+import br.com.iterator.model.bean.petcenterjau.Configs;
 import br.com.iterator.model.helper.XMLHelper;
 
 public class Magento17Api extends DefaultApi10a

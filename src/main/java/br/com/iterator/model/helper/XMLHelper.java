@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import br.com.iterator.model.bean.Configs;
+import br.com.iterator.model.bean.petcenterjau.Configs;
 
 public class XMLHelper {
 	
