@@ -9,6 +9,7 @@ public interface InterfaceDAO<T> {
 	void excluir(T bean);
 	T getBean(Serializable codigo);
 	List<T> getBeans();
+	public List<T> getBeansMaxResults(Integer qtd);
 	List<T> getBeansByExample(T bean);
 	T getBeanByParametro(String parametro, String valor);
 }

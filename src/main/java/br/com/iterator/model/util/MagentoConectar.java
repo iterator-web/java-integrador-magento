@@ -20,9 +20,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 import br.com.iterator.model.bean.petcenterjau.Configs;
+import br.com.iterator.model.helper.XMLHelper;
 import br.com.iterator.model.util.Magento17Api;
 
 public class MagentoConectar {
+	
+	public static OAuthService SERVICE;
+	public static Token TOKEN;
+	public static String REST_API_URL;
 
 	private Scanner in;
 	private WebClient webClient;
@@ -76,6 +81,14 @@ public class MagentoConectar {
 
 	public String getMagentoRestApiUrl(Configs configs) {
 		return configs.getRestApiUrl();
+	}
+	
+	public void estabelecerConexao() {
+		XMLHelper xmlHelper = new XMLHelper();
+		Configs configs = xmlHelper.getValorNode();
+		MagentoConectar.SERVICE = this.getService(configs);
+        MagentoConectar.TOKEN = this.getToken(configs);
+        MagentoConectar.REST_API_URL = this.getMagentoRestApiUrl(configs);
 	}
 	
 	private static String getVerifierCode(String retornoAuth) {
