@@ -16,16 +16,12 @@ import br.com.iterator.model.util.MagentoConectar;
  */
 public class App 
 {
-    public static void main( String[] args )
-    {
-		XMLHelper xmlHelper = new XMLHelper();
-		Configs configs = xmlHelper.getValorNode();
-		
+    public static void main( String[] args ) {
         MagentoConectar magentoConectar = new MagentoConectar();
-        OAuthService service = magentoConectar.getService(configs);
-        Token accessToken = magentoConectar.getToken(configs);
-        OAuthRequest request = new OAuthRequest(Verb.GET, magentoConectar.getMagentoRestApiUrl(configs) + "/stockitems?type=rest");
-		service.signRequest(accessToken, request);
+        magentoConectar.estabelecerConexao();
+        
+        OAuthRequest request = new OAuthRequest(Verb.GET, MagentoConectar.REST_API_URL + "/stockitems?type=rest");
+		MagentoConectar.SERVICE.signRequest(MagentoConectar.TOKEN, request);
 		Response response = request.send();
 		
 		System.out.println(response.getBody());
