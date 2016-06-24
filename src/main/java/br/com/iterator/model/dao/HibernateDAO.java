@@ -93,6 +93,20 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			session.close();
 		}		
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> getBeansMaxResults(Integer qtd) {
+		session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			List<T> beans = (List<T>)session.createCriteria(classe).setMaxResults(qtd).list();			
+			session.getTransaction().commit();
+			return beans;
+		} finally {
+			session.close();
+		}		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
