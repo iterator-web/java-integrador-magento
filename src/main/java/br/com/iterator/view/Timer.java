@@ -3,6 +3,8 @@ package br.com.iterator.view;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import br.com.iterator.controller.IntegracaoController;
+
 public class Timer extends Thread {
 	private JTextField field;
     private boolean integracao;
@@ -18,11 +20,8 @@ public class Timer extends Thread {
 				new Runnable() {
 					public void run() {
 						try {
-							/*
 							IntegracaoController integracaoController = new IntegracaoController();
-							integracao = ((IntegracaoController) integracaoController).intController();
-							*/
-							integracao = true; // Simulação, trocar para a resposta do Controller quando estiver disponível.
+							integracao = ((IntegracaoController) integracaoController).integrar();
 							if(integracao) {
 								field.setText("Dados Integrados com Sucesso!");
 							} else {
