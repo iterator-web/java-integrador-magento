@@ -92,9 +92,9 @@ public class MagentoConectar {
 	}
 	
 	private static String getVerifierCode(String retornoAuth) {
-		Integer posicaoInicial = retornoAuth.indexOf("Verifier code:");
-        Integer posicaoFinal = retornoAuth.indexOf("Magento is a trademark of Magento Inc.");
-        String verifierCode = retornoAuth.substring(posicaoInicial+15, posicaoFinal);
+		Integer posicaoInicial = retornoAuth.indexOf("Código verificador:");
+        Integer posicaoFinal = retornoAuth.indexOf("Magento é uma marca registrada de Magento Inc. Copyright © 2016 Magento Inc.");
+        String verifierCode = retornoAuth.substring(posicaoInicial+20, posicaoFinal);
         
         return verifierCode;
 	}
