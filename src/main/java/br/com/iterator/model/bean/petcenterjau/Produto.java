@@ -11,8 +11,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Produto")
 public class Produto implements Serializable {
-	
-	private static final long serialVersionUID = -5031660913239968049L;
+
+	private static final long serialVersionUID = -5511884881440417929L;
 	
 	@Id
 	@GeneratedValue
@@ -28,13 +28,13 @@ public class Produto implements Serializable {
 	private Double precoCusto;
 	@Column(name="Unidade")
 	private String unidade;
-	@Column(name="Referencia")
-	private String referencia;
 	// Não existe relacionamento no BD do ERP. Por isso não pode ser feito no Hibernate.
 	@Column(name="Cor")
 	private Double cor;
 	@Column(name="Tamanho")
 	private String tamanho;
+	@Column(name="Peso_Produto")
+	private Double pesoProduto;
 	@Column(name="Enviar_Pocket")
 	private String enviarPocket;
 	@Column(name="Largura_Produto_Ecommerce")
@@ -91,14 +91,6 @@ public class Produto implements Serializable {
 		this.unidade = unidade;
 	}
 	
-	public String getReferencia() {
-		return referencia;
-	}
-	
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
-	}
-	
 	public Double getCor() {
 		return cor;
 	}
@@ -113,6 +105,14 @@ public class Produto implements Serializable {
 	
 	public void setTamanho(String tamanho) {
 		this.tamanho = tamanho;
+	}
+	
+	public Double getPesoProduto() {
+		return pesoProduto;
+	}
+	
+	public void setPesoProduto(Double pesoProduto) {
+		this.pesoProduto = pesoProduto;
 	}
 	
 	public String getEnviarPocket() {
@@ -158,10 +158,10 @@ public class Produto implements Serializable {
 		result = prime * result + ((enviarPocket == null) ? 0 : enviarPocket.hashCode());
 		result = prime * result + ((larguraProdutoEcommerce == null) ? 0 : larguraProdutoEcommerce.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((pesoProduto == null) ? 0 : pesoProduto.hashCode());
 		result = prime * result + ((precoCusto == null) ? 0 : precoCusto.hashCode());
 		result = prime * result + ((precoDesconto == null) ? 0 : precoDesconto.hashCode());
 		result = prime * result + ((precoProduto == null) ? 0 : precoProduto.hashCode());
-		result = prime * result + ((referencia == null) ? 0 : referencia.hashCode());
 		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
 		result = prime * result + ((unidade == null) ? 0 : unidade.hashCode());
 		return result;
@@ -211,6 +211,11 @@ public class Produto implements Serializable {
 				return false;
 		} else if (!nome.equals(other.nome))
 			return false;
+		if (pesoProduto == null) {
+			if (other.pesoProduto != null)
+				return false;
+		} else if (!pesoProduto.equals(other.pesoProduto))
+			return false;
 		if (precoCusto == null) {
 			if (other.precoCusto != null)
 				return false;
@@ -225,11 +230,6 @@ public class Produto implements Serializable {
 			if (other.precoProduto != null)
 				return false;
 		} else if (!precoProduto.equals(other.precoProduto))
-			return false;
-		if (referencia == null) {
-			if (other.referencia != null)
-				return false;
-		} else if (!referencia.equals(other.referencia))
 			return false;
 		if (tamanho == null) {
 			if (other.tamanho != null)
