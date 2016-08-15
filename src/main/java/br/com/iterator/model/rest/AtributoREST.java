@@ -9,6 +9,7 @@ import org.scribe.model.Verb;
 import br.com.iterator.model.bean.magento.MagentoAttribute;
 import br.com.iterator.model.bean.magento.MagentoAttributeOption;
 import br.com.iterator.model.helper.JsonObjectHelper;
+import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.util.MagentoConectar;
 
 public class AtributoREST {
@@ -20,8 +21,7 @@ public class AtributoREST {
 		MagentoConectar.SERVICE.signRequest(MagentoConectar.TOKEN, request);
 		Response response = request.send();
 		if(!response.getBody().equals("")) {
-			// Grava no log que a opção do atributo não pode ser criada pelo erro descrito em response.getBody() que deverá ser transcrito no log.
-			//System.out.println(response.getBody());
+			LogHelper.LOGGER.severe("Falha na criação/atualização da opção de atributo: "+response.getBody());
 		}
 	}
 

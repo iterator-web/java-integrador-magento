@@ -20,6 +20,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPasswordInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 import br.com.iterator.model.bean.petcenterjau.Configs;
+import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.helper.XMLHelper;
 import br.com.iterator.model.util.Magento17Api;
 
@@ -65,10 +66,13 @@ public class MagentoConectar {
 			accessToken = service.getAccessToken(requestToken, verifier);
 		} catch (FailingHttpStatusCodeException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		}
 		
 		return accessToken;

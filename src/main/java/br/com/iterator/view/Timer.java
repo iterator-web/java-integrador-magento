@@ -4,6 +4,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import br.com.iterator.controller.IntegracaoController;
+import br.com.iterator.model.helper.LogHelper;
 
 public class Timer extends Thread {
 	private JTextField field;
@@ -29,6 +30,7 @@ public class Timer extends Thread {
 							}						
 						} catch(Exception e) {
 							e.printStackTrace();
+							LogHelper.LOGGER.severe(e.getMessage());
 						}
 					}
 				}
@@ -37,6 +39,7 @@ public class Timer extends Thread {
 				Thread.sleep(10000); 
 			} catch(InterruptedException e) {
 				e.printStackTrace();
+				LogHelper.LOGGER.severe(e.getMessage());
 			}			
 		}
 	}

@@ -10,6 +10,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.iterator.model.dao.InterfaceDAO;
+import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.util.HibernateUtil;
 
 public class HibernateDAO<T> implements InterfaceDAO<T> {
@@ -30,6 +31,7 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			session.getTransaction().commit();
 		}catch (Exception e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 			session.getTransaction().rollback();
 		} finally {
 			session.close();
@@ -45,6 +47,7 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			session.getTransaction().commit();
 		}catch (Exception e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 			session.getTransaction().rollback();
 		} finally {
 			session.close();
@@ -60,6 +63,7 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			session.getTransaction().commit();
 		}catch (Exception e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 			session.getTransaction().rollback();
 		} finally {
 			session.close();

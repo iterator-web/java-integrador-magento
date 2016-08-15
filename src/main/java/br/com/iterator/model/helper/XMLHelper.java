@@ -22,7 +22,7 @@ import br.com.iterator.model.bean.petcenterjau.Configs;
 
 public class XMLHelper {
 	
-	private String caminho = "c:\\Trabalho\\configs.xml";;
+	private String caminho = "c:\\Trabalho\\configs.xml";
 
 	public Configs getValorNode() {
 		Configs configs = new Configs();
@@ -89,8 +89,10 @@ public class XMLHelper {
 			transformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		} catch (TransformerException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		}
 	}
 	
@@ -112,10 +114,13 @@ public class XMLHelper {
 			doc = docBuilder.parse(xmlFile);
 		} catch (SAXException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
 		}
 		
 		return doc;
