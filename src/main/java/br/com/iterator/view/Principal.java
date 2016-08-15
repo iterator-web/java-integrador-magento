@@ -23,6 +23,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import br.com.iterator.model.bean.petcenterjau.Configs;
 import br.com.iterator.model.helper.JPanelWithBackground;
+import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.helper.XMLHelper;
 
 public class Principal {
@@ -134,7 +135,10 @@ public class Principal {
 		field.setFont(font1);
 		
 		frame.getContentPane().add(background);
-		
+
+    	LogHelper logHelper = new LogHelper();
+    	logHelper.getLogger();
+    	
 		new Timer(field).start();
 		Image image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("imagens/favicon.png"));
 		TrayIcon icon = new TrayIcon(image, "Integrador Magento", createPopupMenu());
