@@ -23,34 +23,37 @@ public class JsonObjectHelper {
 	public String magentoProductConvertJavaObjectToJson(MagentoProduct magentoProduct, Produto produto) {
 		String jsonString = null;
 		try {
+    		AtributosHelper atributosHelper = new AtributosHelper();
 			ObjectMapper objectMapper = new ObjectMapper();
 	    	magentoProduct.setSku("c-"+produto.getCodigo());
 	    	magentoProduct.setName(produto.getNome());
 	    	magentoProduct.setPrice(produto.getPrecoProduto());
 	    	if(produto.getCor() != 0.00000) {
 	    		InterfaceDAO<Cores> coresDAO = new HibernateDAO<Cores>(Cores.class);
-				Cores cor = coresDAO.getBean(produto.getCor());
-	    		magentoProduct.setColor(cor.getNome());
+				Cores cor = coresDAO.getBean(produto.getCor().intValue());
+				MagentoAttributeOption magentoAttributeOption = atributosHelper.getOpcaoAtributo("color", cor.getNome());
+	    		magentoProduct.setColor(magentoAttributeOption.getValue());
 	    	}
 	    	if(produto.getTamanho() != null && !produto.getTamanho().equals("")) {
-	    		AtributosHelper atributosHelper = new AtributosHelper();
+	    		String magentoAttributeCodeTamanho = atributosHelper.getValorFromUnidade(produto.getUnidade(), "code");
 	    		String tamanhoNome = atributosHelper.getTamanhoNome(produto.getTamanho(), produto.getUnidade());
+	    		MagentoAttributeOption magentoAttributeOption = atributosHelper.getOpcaoAtributo(magentoAttributeCodeTamanho, tamanhoNome);
 	    		if(produto.getUnidade().equals("KG")) {
-	    			magentoProduct.setPeso(tamanhoNome);
+	    			magentoProduct.setPeso(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("L")) {
-	    			magentoProduct.setVolume(tamanhoNome);
+	    			magentoProduct.setVolume(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("UN")) {
-	    			magentoProduct.setQuantidade(tamanhoNome);
+	    			magentoProduct.setQuantidade(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("PC")) {
-	    			magentoProduct.setSize(tamanhoNome);
+	    			magentoProduct.setSize(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("SC")) {
-	    			magentoProduct.setSaco(tamanhoNome);
+	    			magentoProduct.setSaco(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("CX")) {
-	    			magentoProduct.setCaixa(tamanhoNome);
+	    			magentoProduct.setCaixa(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("CM")) {
-	    			magentoProduct.setComprimento(tamanhoNome);
+	    			magentoProduct.setComprimento(magentoAttributeOption.getValue());
 	    		} else if(produto.getUnidade().equals("V")) {
-	    			magentoProduct.setVoltagem(tamanhoNome);
+	    			magentoProduct.setVoltagem(magentoAttributeOption.getValue());
 	    		}
 	    	}
 	    	magentoProduct.setWeight(produto.getPesoProduto());
@@ -121,5 +124,24 @@ public class JsonObjectHelper {
 		}
 		
 		return magentoAttributeOptionLista;
+	}
+	
+	public MagentoAttributeOption magentoAttributeOptionConvertjsonToJavaObject(String jsonMagentoAttributeOption) {
+		MagentoAttributeOption magentoAttributeOption = new MagentoAttributeOption();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			magentoAttributeOption = objectMapper.readValue(jsonMagentoAttributeOption, MagentoAttributeOption.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return magentoAttributeOption;
 	}
 }
