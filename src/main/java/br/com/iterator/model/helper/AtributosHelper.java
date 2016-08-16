@@ -43,7 +43,7 @@ public class AtributosHelper {
 		if(produto.getCor() != 0.00000) {
 			boolean corExiste = false;
 			InterfaceDAO<Cores> coresDAO = new HibernateDAO<Cores>(Cores.class);
-			Cores cor = coresDAO.getBean(produto.getCor());
+			Cores cor = coresDAO.getBean(produto.getCor().intValue());
 			List<MagentoAttributeOption> magentoAttributeOptionLista = atributoREST.listarOpcoesAtributo("color");
 			for (MagentoAttributeOption magentoAttributeOption : magentoAttributeOptionLista) {
 				if(cor.getNome().equals(magentoAttributeOption.getLabel())) {
@@ -73,7 +73,7 @@ public class AtributosHelper {
 	
 	public String getTamanhoNome(String tamanho, String unidade){
 		String tamanhoNome = null;
-		if(tamanho.substring(0, 2).equals("0,")) {
+		if(tamanho.length() > 2 && tamanho.substring(0, 2).equals("0,")) {
 			String tamanhoUnidade = this.getValorFromUnidade(unidade, "menor");
 			tamanhoNome = tamanho.substring(2)+tamanhoUnidade;
 		} else {
@@ -166,5 +166,11 @@ public class AtributosHelper {
 		}
 		
 		return valor;
+	}
+	
+	public MagentoAttributeOption getOpcaoAtributo(String attributeCode, String attributeOptionLabel) {
+		AtributoREST atributoREST = new AtributoREST();
+		MagentoAttributeOption magentoAttributeOption = atributoREST.carregarOpcaoAtributo(attributeCode, attributeOptionLabel);
+		return magentoAttributeOption;
 	}
 }

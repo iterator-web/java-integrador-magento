@@ -2,6 +2,7 @@ package br.com.iterator.model.rest;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
@@ -15,7 +16,7 @@ import br.com.iterator.model.util.MagentoConectar;
 public class AtributoREST {
 	
 	public void criarAtualizarOpcaoAtributo(String attributeCode, String parametrosPostJson) {
-    	OAuthRequest request = new OAuthRequest(Verb.POST, MagentoConectar.REST_API_URL + "/integrador/atributo/color/opcoes?type=rest");
+    	OAuthRequest request = new OAuthRequest(Verb.POST, MagentoConectar.REST_API_URL + "/integrador/atributo/"+attributeCode+"/opcoes?type=rest");
     	request.addHeader("Content-Type", "application/json");
     	request.addPayload(parametrosPostJson);
 		MagentoConectar.SERVICE.signRequest(MagentoConectar.TOKEN, request);
@@ -41,5 +42,15 @@ public class AtributoREST {
 		Response response = request.send();
 		List<MagentoAttributeOption> magentoAttributeOptionLista = jsonObjectHelper.magentoAttributeOptionListConvertjsonToJavaObject(response.getBody());
 		return magentoAttributeOptionLista;
+	}
+	
+	public MagentoAttributeOption carregarOpcaoAtributo(String attributeCode, String attributeOptionLabel) {
+		String escapedText = StringEscapeUtils.escapeHtml4(attributeOptionLabel).replace(" ", "%20"); // Converte os caracteres especiais em html e substitui os espaços em branco para enviar na URL.
+		JsonObjectHelper jsonObjectHelper = new JsonObjectHelper();
+		OAuthRequest request = new OAuthRequest(Verb.GET, MagentoConectar.REST_API_URL + "/integrador/atributo/"+attributeCode+"/opcao/"+escapedText+"?type=rest");
+		MagentoConectar.SERVICE.signRequest(MagentoConectar.TOKEN, request);
+		Response response = request.send();
+		MagentoAttributeOption magentoAttributeOption = jsonObjectHelper.magentoAttributeOptionConvertjsonToJavaObject(response.getBody());
+		return magentoAttributeOption;
 	}
 }
