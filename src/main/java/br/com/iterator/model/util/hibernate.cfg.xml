@@ -23,6 +23,7 @@
         <mapping class="br.com.iterator.model.bean.petcenterjau.MagentoFilaIntegracao" />
         <mapping class="br.com.iterator.model.bean.petcenterjau.Produto" />
         <mapping class="br.com.iterator.model.bean.petcenterjau.Cores" />
+        <mapping class="br.com.iterator.model.bean.petcenterjau.Estoque" />
         
     </session-factory>
 </hibernate-configuration>
