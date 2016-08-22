@@ -12,4 +12,5 @@ public interface InterfaceDAO<T> {
 	public List<T> getBeansMaxResults(Integer qtd);
 	List<T> getBeansByExample(T bean);
 	T getBeanByParametro(String parametro, String valor);
+	Integer somarEstoque(Integer produto);
 }
