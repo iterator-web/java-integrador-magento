@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.iterator.model.dao.InterfaceDAO;
@@ -139,6 +140,23 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			T bean = (T) criteria.uniqueResult();
 			session.getTransaction().commit();
 			return bean;
+		} finally {
+			session.close();
+		}
+	}
+	
+	@Override
+	public Integer somarEstoque(Integer produto) {
+		session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(classe);
+			criteria.add(Restrictions.eq("produto", produto));
+			criteria.add(Restrictions.ne("deposito", 13)); // Estoque de troca não será incluso na loja virtual
+			criteria.setProjection(Projections.sum("qtde"));
+			Double quantidade = (Double) criteria.uniqueResult();
+			session.getTransaction().commit();
+			return quantidade.intValue();
 		} finally {
 			session.close();
 		}
