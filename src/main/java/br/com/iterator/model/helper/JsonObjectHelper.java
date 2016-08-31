@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.iterator.model.bean.magento.MagentoAttribute;
 import br.com.iterator.model.bean.magento.MagentoAttributeOption;
 import br.com.iterator.model.bean.magento.MagentoProduct;
+import br.com.iterator.model.bean.magento.MagentoStock;
 import br.com.iterator.model.bean.petcenterjau.Cores;
 import br.com.iterator.model.bean.petcenterjau.Produto;
 import br.com.iterator.model.dao.HibernateDAO;
@@ -28,7 +29,8 @@ public class JsonObjectHelper {
 	    	magentoProduct.setSku("c-"+produto.getCodigo());
 	    	magentoProduct.setName(produto.getNome());
 	    	magentoProduct.setPrice(produto.getPrecoProduto());
-	    	if(produto.getCor() != 0.00000) {
+	    	magentoProduct.setStatus(1);
+	    	if(produto.getCor() != null && produto.getCor() != 0.00000) {
 	    		InterfaceDAO<Cores> coresDAO = new HibernateDAO<Cores>(Cores.class);
 				Cores cor = coresDAO.getBean(produto.getCor().intValue());
 				MagentoAttributeOption magentoAttributeOption = atributosHelper.getOpcaoAtributo("color", cor.getNome());
@@ -61,6 +63,50 @@ public class JsonObjectHelper {
 	    	magentoProduct.setVolumeAltura(produto.getAlturaProdutoEcommerce());
 	    	magentoProduct.setVolumeLargura(produto.getLarguraProdutoEcommerce());
 			jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(magentoProduct);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return jsonString;
+	}
+	
+	public String magentoProductSomenteConvertJavaObjectToJson(MagentoProduct magentoProduct, String acao) {
+		String jsonString = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			if(acao.equals("desabilitar")) {
+				magentoProduct.setStatus(2);
+			}
+			jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(magentoProduct);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return jsonString;
+	}
+	
+	public String magentoStockConvertJavaObjectToJson(Integer estoqueTotal, MagentoStock magentoStock) {
+		String jsonString = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			if(estoqueTotal == -100) {
+				// Caso o estoqueTotal possua valor -100, significa que trata-se de um produto configurable sem estoque.
+				magentoStock.setIsInStock(0);
+			} else if(estoqueTotal == -200) {
+				// Caso o estoqueTotal possua valor -200, significa que trata-se de um produto configurable com estoque.
+				magentoStock.setIsInStock(1);
+			} else {
+				// Caso seja um valor diferente dos fixados para os produtos configurables, será um simples e a quantidade deverá ser ajustada com exatidão.
+				magentoStock.setQty(estoqueTotal+".0000");
+				if(estoqueTotal <= 0) {
+					magentoStock.setIsInStock(0);
+				} else {
+					magentoStock.setIsInStock(1);
+				}
+			}
+			jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(magentoStock);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			LogHelper.LOGGER.severe(e.getMessage());
@@ -143,5 +189,24 @@ public class JsonObjectHelper {
 		}
 		
 		return magentoAttributeOption;
+	}
+	
+	public MagentoStock magentoStockConvertjsonToJavaObject(String jsonMagentoStock) {
+		MagentoStock magentoStock = new MagentoStock();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			magentoStock = objectMapper.readValue(jsonMagentoStock, MagentoStock.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return magentoStock;
 	}
 }

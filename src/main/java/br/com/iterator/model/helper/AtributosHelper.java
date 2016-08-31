@@ -24,23 +24,23 @@ public class AtributosHelper {
 		}
 		// Verifica se o produto referenciado possui vinculo com os atributos necessários.
 		for (MagentoAttribute magentoAttribute : magentoAttributeLista) {
-			if(produto.getCor() != 0.00000) {
+			if(produto.getCor() != null && produto.getCor() != 0.00000) {
 				if(magentoAttribute.getAttributeCode().equals("color")) {
 					temCor = true;
 				}
 			}
-			if(produto.getTamanho() != null) {
+			if(produto.getTamanho() != null && !produto.getTamanho().equals("")) {
 				if(magentoAttribute.getAttributeCode().equals(magentoAttributeCodeTamanho)) {
 					temTamanho = true;
 				}
 			}
 		}
 		// Caso não possua, retorna como false, encerrando o processo.
-		if(produto.getCor() != 0.00000 && !temCor || produto.getTamanho() != null && !temTamanho) {
+		if(produto.getCor() != null && produto.getCor() != 0.00000 && !temCor || produto.getTamanho() != null && !produto.getTamanho().equals("") && !temTamanho) {
 			return false;
 		}
 		// Verifica se o atributo do produto no ERP já é uma opção de atributo no Magento.
-		if(produto.getCor() != 0.00000) {
+		if(produto.getCor() != null && produto.getCor() != 0.00000) {
 			boolean corExiste = false;
 			InterfaceDAO<Cores> coresDAO = new HibernateDAO<Cores>(Cores.class);
 			Cores cor = coresDAO.getBean(produto.getCor().intValue());
@@ -71,7 +71,7 @@ public class AtributosHelper {
 		return true;
 	}
 	
-	public String getTamanhoNome(String tamanho, String unidade){
+	public String getTamanhoNome(String tamanho, String unidade) {
 		String tamanhoNome = null;
 		if(tamanho.length() > 2 && tamanho.substring(0, 2).equals("0,")) {
 			String tamanhoUnidade = this.getValorFromUnidade(unidade, "menor");
@@ -89,10 +89,12 @@ public class AtributosHelper {
 				} else {
 					tamanhoNome = tamanho+" Comprimidos";
 				}
-			} else if(unidade.equals("PC")) {
+			} else if(unidade.equals("PC") || unidade.equals("D") || unidade.equals("PE")) {
 				tamanhoNome = tamanho;
 			} else if(unidade.equals("V")) {
 				tamanhoNome = tamanho+"V";
+			} else if(unidade.equals("MG")) {
+				tamanhoNome = tamanho+"mg";
 			} else {
 				String tamanhoUnidade = this.getValorFromUnidade(unidade, "maior");
 				tamanhoNome = tamanho+tamanhoUnidade;
@@ -159,6 +161,21 @@ public class AtributosHelper {
 		case "V":
 			if(tipo.equals("code")) {
 				valor = "voltagem";
+			}
+			break;
+		case "D":
+			if(tipo.equals("code")) {
+				valor = "sabor";
+			}
+			break;
+		case "MG":
+			if(tipo.equals("code")) {
+				valor = "miligramas";
+			}
+			break;
+		case "PE":
+			if(tipo.equals("code")) {
+				valor = "faixa_peso";
 			}
 			break;
 		default:
