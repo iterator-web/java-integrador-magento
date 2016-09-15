@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.iterator.model.bean.magento.MagentoAttribute;
 import br.com.iterator.model.bean.magento.MagentoAttributeOption;
+import br.com.iterator.model.bean.magento.MagentoCustomer;
+import br.com.iterator.model.bean.magento.MagentoOrder;
 import br.com.iterator.model.bean.magento.MagentoProduct;
 import br.com.iterator.model.bean.magento.MagentoStock;
 import br.com.iterator.model.bean.petcenterjau.Cores;
@@ -79,6 +82,21 @@ public class JsonObjectHelper {
 				magentoProduct.setStatus(2);
 			}
 			jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(magentoProduct);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return jsonString;
+	}
+	
+	public String magentoCustomerConvertJavaObjectToJson(MagentoCustomer magentoCustomer) {
+		String jsonString = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(Include.NON_NULL); // Necessário para não incluir campos nulos na String json e portanto não alterar de forma errada a data de nascimento.
+			magentoCustomer.setDob(null);
+			jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(magentoCustomer);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			LogHelper.LOGGER.severe(e.getMessage());
@@ -208,5 +226,43 @@ public class JsonObjectHelper {
 		}
 		
 		return magentoStock;
+	}
+	
+	public List<MagentoOrder> magentoOrderListConvertjsonToJavaObject(String jsonMagentoOrder) {
+		List<MagentoOrder> magentoOrderLista = new ArrayList<MagentoOrder>();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			magentoOrderLista = objectMapper.readValue(jsonMagentoOrder, new TypeReference<List<MagentoOrder>>(){});
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return magentoOrderLista;
+	}
+	
+	public MagentoCustomer magentoCustomerConvertjsonToJavaObject(String jsonMagentoCustomer) {
+		MagentoCustomer magentoCustomer = new MagentoCustomer();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			magentoCustomer = objectMapper.readValue(jsonMagentoCustomer, MagentoCustomer.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			LogHelper.LOGGER.severe(e.getMessage());
+		}
+		
+		return magentoCustomer;
 	}
 }
