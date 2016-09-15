@@ -7,9 +7,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.iterator.model.bean.petcenterjau.Orcamento;
 import br.com.iterator.model.dao.InterfaceDAO;
 import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.util.HibernateUtil;
@@ -136,8 +138,24 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 		try {
 			session.beginTransaction();
 			Criteria criteria = session.createCriteria(classe);
-			criteria.add(Restrictions.eq(parametro, valor));	
+			criteria.add(Restrictions.like(parametro, valor));	
 			T bean = (T) criteria.uniqueResult();
+			session.getTransaction().commit();
+			return bean;
+		} finally {
+			session.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public T getBeanByUltimoCodigo() {
+		session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(classe);
+			criteria.addOrder(Order.desc("codigo"));  
+			T bean = (T) criteria.list().get(0);  
 			session.getTransaction().commit();
 			return bean;
 		} finally {
@@ -157,6 +175,22 @@ public class HibernateDAO<T> implements InterfaceDAO<T> {
 			Double quantidade = (Double) criteria.uniqueResult();
 			session.getTransaction().commit();
 			return quantidade.intValue();
+		} finally {
+			session.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<T> getItensByOrcamento(Orcamento orcamento) {
+		session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			session.beginTransaction();
+			Criteria criteria = session.createCriteria(classe);
+			criteria.add(Restrictions.eq("orcamento", orcamento));
+			List<T> beans = criteria.list();
+			session.getTransaction().commit();
+			return beans;
 		} finally {
 			session.close();
 		}
