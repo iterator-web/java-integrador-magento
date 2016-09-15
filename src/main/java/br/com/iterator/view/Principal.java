@@ -11,7 +11,10 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.List;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +25,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import br.com.iterator.model.bean.petcenterjau.Configs;
+import br.com.iterator.model.bean.petcenterjau.MagentoFilaIntegracao;
+import br.com.iterator.model.bean.petcenterjau.Produto;
+import br.com.iterator.model.dao.HibernateDAO;
+import br.com.iterator.model.dao.InterfaceDAO;
 import br.com.iterator.model.helper.JPanelWithBackground;
 import br.com.iterator.model.helper.LogHelper;
 import br.com.iterator.model.helper.XMLHelper;
@@ -55,7 +62,7 @@ public class Principal {
 			public void actionPerformed(ActionEvent e) {
 				XMLHelper xmlHelper = new XMLHelper();
 				Configs configs = xmlHelper.getValorNode();
-				JPanel myPanel = new JPanel(new GridLayout(9,2));
+				JPanel myPanel = new JPanel(new GridLayout(10,2));
 				JTextField baseUrlField = new JTextField(20);
 				baseUrlField.setText(configs.getBaseUrl());
 				JTextField requestTokenEndpointField = new JTextField(20);
@@ -74,6 +81,7 @@ public class Principal {
 				adminUserField.setText(configs.getAdminUser());
 				JPasswordField adminPasswordField = new JPasswordField();
 				adminPasswordField.setText(String.valueOf(configs.getAdminPassword()));
+				JCheckBox integrarCheck = new JCheckBox("Integrar Tudo");
 				myPanel.add(new JLabel("Base URL:"));
 				myPanel.add(baseUrlField);
 				myPanel.add(new JLabel("Request Token Endpoint:"));
@@ -92,6 +100,8 @@ public class Principal {
 				myPanel.add(adminUserField);
 				myPanel.add(new JLabel("Senha Admin:"));
 				myPanel.add(adminPasswordField);
+				myPanel.add(new JLabel("Fila de Integração:"));
+				myPanel.add(integrarCheck);
 				int action = JOptionPane.showConfirmDialog(null, myPanel, "Configurações:",
 			    		JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);  
 			    if(action == JOptionPane.OK_OPTION) {
@@ -105,6 +115,19 @@ public class Principal {
 			    	configs.setAdminUser(adminUserField.getText());
 			    	configs.setAdminPassword(adminPasswordField.getPassword());
 			    	xmlHelper.setValorNode(configs);
+			    	if(integrarCheck.isSelected() && !integrarCheck.getText().isEmpty()) {
+			    		InterfaceDAO<Produto> produtoDAO = new HibernateDAO<Produto>(Produto.class);
+			    		List<Produto> produtoList = produtoDAO.getBeans();
+			    		InterfaceDAO<MagentoFilaIntegracao> magentoFilaIntegracaoDAO = new HibernateDAO<MagentoFilaIntegracao>(MagentoFilaIntegracao.class);
+			    		for(Produto produto : produtoList) {
+			    			MagentoFilaIntegracao magentoFilaIntegracao = new MagentoFilaIntegracao();
+							magentoFilaIntegracao.setTabela("Produto");
+							magentoFilaIntegracao.setChave(String.valueOf(produto.getCodigo()));
+							magentoFilaIntegracao.setOperacao("U");
+							magentoFilaIntegracao.setHorario(new Date());
+							magentoFilaIntegracaoDAO.salvar(magentoFilaIntegracao);
+			    		}
+			    	}
 			    }
 			}
 		});
