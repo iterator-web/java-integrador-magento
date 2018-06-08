@@ -5,7 +5,7 @@ import org.scribe.model.Token;
 
 public class Magento17Api extends DefaultApi10a
 {
-	private static final String BASE_URL = "http://192.168.106.128/magentoPetCenter/index.php/";
+	private static final String BASE_URL = "http://127.0.0.1/magentoPetCenter/index.php/";
 
 	@Override
 	public String getRequestTokenEndpoint() {

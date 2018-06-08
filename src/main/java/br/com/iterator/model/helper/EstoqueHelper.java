@@ -34,7 +34,7 @@ public class EstoqueHelper {
 		ProdutoREST produtoREST = new ProdutoREST();
 		MagentoProduct magentoProductReferencia = produtoREST.carregarConfigurableBySku("c-"+produtoCodigoERP+";");
 		// Caso exista uma referência do produto do ERP no Magento, então trata-se de um simples vinculado a um Configurable.
-		if(magentoProductReferencia.getEntityId() != null && magentoProductReferencia.getTypeId().equals("configurable")) {
+		if(magentoProductReferencia != null && magentoProductReferencia.getTypeId().equals("configurable")) {
 			EstoqueREST estoqueREST = new EstoqueREST();
 			String skuSplit[] = magentoProductReferencia.getSku().split(";");
 			// -100 é o valor definido para indicar que o produto não possui estoque.
